@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout
@@ -44,18 +44,13 @@ jobs:
           sed -i 's/^source.include_exts = .*/source.include_exts = py,png,jpg,kv,atlas/' buildozer.spec
           sed -i 's/^requirements = .*/requirements = python3,kivy/' buildozer.spec
           sed -i 's/^orientation = .*/orientation = portrait/' buildozer.spec
+          sed -i 's/^# *android.accept_sdk_license = .*/android.accept_sdk_license = True/' buildozer.spec
           sed -i 's/^# *android.api = .*/android.api = 35/' buildozer.spec
           sed -i 's/^# *android.minapi = .*/android.minapi = 21/' buildozer.spec
 
-      - name: Prepare Android SDK licenses
-        run: |
-          mkdir -p "$HOME/.buildozer/android/platform/android-sdk/licenses"
-          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses || true
-          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platform-tools" "platforms;android-35" "build-tools;35.0.0" || true
-
       - name: Build APK
         run: |
-          buildozer -v android debug
+          yes | buildozer -v android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
