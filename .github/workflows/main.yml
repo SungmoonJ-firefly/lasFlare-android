@@ -22,7 +22,7 @@ jobs:
           sudo apt-get install -y \
             git zip unzip openjdk-17-jdk \
             autoconf automake libtool pkg-config \
-            zlib1g-dev libncurses5-dev libncursesw5-dev \
+            zlib1g-dev libncurses5-dev \
             cmake libffi-dev libssl-dev
 
       - name: Install Python packages
@@ -43,6 +43,10 @@ jobs:
           sed -i 's/^source.include_exts = .*/source.include_exts = py,png,jpg,kv,atlas/' buildozer.spec
           sed -i 's/^requirements = .*/requirements = python3,kivy/' buildozer.spec
           sed -i 's/^orientation = .*/orientation = portrait/' buildozer.spec
+
+      - name: Accept Android SDK licenses
+        run: |
+          yes | sdkmanager --licenses || true
 
       - name: Build APK
         run: |
